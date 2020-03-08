@@ -48,6 +48,5 @@ public class Main {
         evaluator.GetDiagonalUpScore(board.board[2][2], Color.RED);
         evaluator.GetDiagonalDownScore(board.board[2][2], Color.RED);
 
-
     }
 }
