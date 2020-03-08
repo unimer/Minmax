@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Coin {
+public class Field {
 
     public Color color;
     public Position position;
     public HashMap<String, ArrayList> surroundings;
 
-    public Coin(Color color, int x, int y){
+    public Field(Color color, int x, int y){
         this.color = color;
         this.position = new Position();
         this.position.x = x;
@@ -31,40 +31,40 @@ public class Coin {
         return color;
     }
 
-    private ArrayList<Coin> UpInform(Coin[][] board){
-        ArrayList<Coin> list = new ArrayList<Coin>();
+    private ArrayList<Field> UpInform(Field[][] board){
+        ArrayList<Field> list = new ArrayList<Field>();
         for (int i=position.y + 1; i<Config.SIZE_Y; i++){
             list.add(board[position.x][i]);
         }
         return list;
     }
 
-    private ArrayList<Coin> DownInform(Coin[][] board){
-        ArrayList<Coin> list = new ArrayList<Coin>();
+    private ArrayList<Field> DownInform(Field[][] board){
+        ArrayList<Field> list = new ArrayList<Field>();
         for (int i=position.y - 1; i>=0; i--){
             list.add(board[position.x][i]);
         }
         return list;
     }
 
-    private ArrayList<Coin> LeftInform(Coin[][] board){
-        ArrayList<Coin> list = new ArrayList<Coin>();
+    private ArrayList<Field> LeftInform(Field[][] board){
+        ArrayList<Field> list = new ArrayList<Field>();
         for (int i=position.x -1; i>=0; i--){
             list.add(board[i][position.y]);
         }
         return list;
     }
 
-    private ArrayList<Coin> RightInform(Coin[][] board){
-        ArrayList<Coin> list = new ArrayList<Coin>();
+    private ArrayList<Field> RightInform(Field[][] board){
+        ArrayList<Field> list = new ArrayList<Field>();
         for (int i=position.x + 1; i<Config.SIZE_X; i++){
             list.add(board[i][position.y]);
         }
         return list;
     }
 
-    private ArrayList<Coin> UpRightInform(Coin[][] board){
-        ArrayList<Coin> list = new ArrayList<Coin>();
+    private ArrayList<Field> UpRightInform(Field[][] board){
+        ArrayList<Field> list = new ArrayList<Field>();
         int y = position.y;
         for (int i=position.x + 1; i<Config.SIZE_X; i++){
             y++;
@@ -74,8 +74,8 @@ public class Coin {
         return list;
     }
 
-    private ArrayList<Coin> DownRightInform(Coin[][] board){
-        ArrayList<Coin> list = new ArrayList<Coin>();
+    private ArrayList<Field> DownRightInform(Field[][] board){
+        ArrayList<Field> list = new ArrayList<Field>();
         int y = position.y;
         for (int i=position.x + 1; i<Config.SIZE_X; i++){
             y--;
@@ -86,8 +86,8 @@ public class Coin {
 
     }
 
-    private ArrayList<Coin> UpLeftInform(Coin[][] board){
-        ArrayList<Coin> list = new ArrayList<Coin>();
+    private ArrayList<Field> UpLeftInform(Field[][] board){
+        ArrayList<Field> list = new ArrayList<Field>();
         int y = position.y;
         for (int i=position.x - 1; i>=0; i--){
             y++;
@@ -97,8 +97,8 @@ public class Coin {
         return list;
     }
 
-    private ArrayList<Coin> DownLeftInform(Coin[][] board){
-        ArrayList<Coin> list = new ArrayList<Coin>();
+    private ArrayList<Field> DownLeftInform(Field[][] board){
+        ArrayList<Field> list = new ArrayList<Field>();
         int y = position.y;
         for (int i=position.x - 1; i>=0; i--){
             y--;
@@ -109,7 +109,7 @@ public class Coin {
     }
 
 
-    public HashMap<String, ArrayList> SenseSurroundings(Coin[][] board){
+    public HashMap<String, ArrayList> SenseSurroundings(Field[][] board){
         surroundings.put("Up", UpInform(board));
         surroundings.put("Down", DownInform(board));
         surroundings.put("Left", LeftInform(board));
@@ -126,7 +126,7 @@ public class Coin {
             String key = name.toString();
             System.out.print(key +  ":: ");
             for(int i=0; i<surroundings.get(name).size(); i++){
-                ArrayList<Coin> list = surroundings.get(name);
+                ArrayList<Field> list = surroundings.get(name);
                 System.out.print("[" + list.get(i).position.x + "," + list.get(i).position.y + "|" + list.get(i).color + "]," );
             }
             System.out.println();

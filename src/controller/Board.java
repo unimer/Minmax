@@ -3,12 +3,12 @@ import config.Color;
 public class Board {
 
     private int size_x, size_y;
-    public Coin board[][];
+    public Field board[][];
 
     public Board(int size_x, int size_y){
         this.size_x = size_x;
         this.size_y = size_y;
-        board = new Coin[size_x][size_y];
+        board = new Field[size_x][size_y];
         InitBoard();
     }
 
@@ -16,7 +16,7 @@ public class Board {
 //        Fill board with blank spaces
         for(int i=0; i<this.size_x; i++){
             for(int j=0; j<this.size_y; j++){
-                board[i][j] = new Coin(Color.BLANK, i, j);
+                board[i][j] = new Field(Color.BLANK, i, j);
             }
         }
 //        Sense surrounding for every field
@@ -50,7 +50,7 @@ public class Board {
         System.out.println("=========================================");
     }
 
-    public void InsertCoin(Color color, int x, int y){
+    public void InsertField(Color color, int x, int y){
         if ((x >= 0 && x < size_x) && (y >= 0 && y<size_y)){
             if (board[x][y].color == Color.BLANK)
             {
@@ -67,7 +67,7 @@ public class Board {
         }
     }
 
-    public Coin GetField(int x, int y){
+    public Field GetField(int x, int y){
         if ((x >= 0 && x < size_x) && (y >= 0 && y<size_y)){
             board[x][y].printSurroundings();
             return board[x][y];
