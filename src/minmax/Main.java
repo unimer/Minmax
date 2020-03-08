@@ -12,7 +12,7 @@ public class Main {
 
         board.InsertField(Color.RED, 2,0);
         board.InsertField(Color.YELLOW, 3,0);
-        board.InsertField(Color.YELLOW, 4,0);
+        board.InsertField(Color.RED, 4,0);
 
         board.InsertField(Color.RED, 1,1);
         board.InsertField(Color.RED, 2,1);
@@ -32,13 +32,21 @@ public class Main {
         board.InsertField(Color.RED, 5,4);
         board.InsertField(Color.YELLOW, 6,4);
 
+        board.InsertField(Color.RED, 6,0);
+        board.InsertField(Color.RED, 6,1);
+        board.InsertField(Color.RED, 6,2);
+
+
         board.PrintBoard();
 
         board.GetField(6,2);
 
         Evaluator evaluator = new Evaluator(board.board);
 
-        evaluator.GetHorizontalScore(board.board[4][1], Color.RED);
+        evaluator.GetHorizontalScore(board.board[6][3], Color.RED);
+        evaluator.GetVerticalScore(board.board[6][3], Color.RED);
+        evaluator.GetDiagonalUpScore(board.board[2][2], Color.RED);
+        evaluator.GetDiagonalDownScore(board.board[2][2], Color.RED);
 
 
     }

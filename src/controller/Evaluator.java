@@ -2,9 +2,20 @@ package controller;
 
 import config.Color;
 import config.Config;
+import javafx.geometry.Side;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+class SideResult{
+    public double score;
+    public int consecutive;
+
+    public SideResult(double score, int consecutive){
+        this.score = score;
+        this.consecutive = consecutive;
+    }
+}
 
 public class Evaluator {
 
@@ -15,7 +26,7 @@ public class Evaluator {
         this.board = board;
     }
 
-    public double EvaluateSide(Field field, String side, Color color){
+    public SideResult EvaluateSide(Field field, String side, Color color){
         int consecutive = 0;
         int siblings = 0;
         double score = 0;
@@ -41,7 +52,7 @@ public class Evaluator {
             }
         }
 
-
+        System.out.println("-------------------------------");
         System.out.println("Consecutive: " + consecutive);
         System.out.println("Left: " + siblings);
 
@@ -74,20 +85,82 @@ public class Evaluator {
                 score += 0;
         }
 
-        return score;
+        return new SideResult(score, consecutive);
     }
 
     public double GetHorizontalScore(Field field, Color color){
-        double leftScore = EvaluateSide(field, "Left", color );
+        SideResult leftSide = EvaluateSide(field, "Left", color );
+        SideResult rightSide = EvaluateSide(field, "Right", color);
+        double totalScore = leftSide.score + rightSide.score;
 
-        System.out.println("Left Score: " + leftScore);
+        if(leftSide.consecutive + rightSide.consecutive >= 3){
+            totalScore = Config.FOUR_IN_A_ROW;
+        }
 
-        return leftScore;
+        System.out.println("==============================");
+        System.out.println("Horizontal Score");
+        System.out.println("==============================");
+        System.out.println("Left Score: " + leftSide.score);
+        System.out.println("Right Score: " + rightSide.score);
+        System.out.println("Total Score: " + totalScore);
+        return totalScore;
+    }
+
+    public double GetVerticalScore(Field field, Color color){
+        SideResult leftSide = EvaluateSide(field, "Up", color );
+        SideResult rightSide = EvaluateSide(field, "Down", color);
+        double totalScore = leftSide.score + rightSide.score;
+
+        if(leftSide.consecutive + rightSide.consecutive >= 3){
+            totalScore = Config.FOUR_IN_A_ROW;
+        }
+
+        System.out.println("==============================");
+        System.out.println("Vertical Score");
+        System.out.println("==============================");
+        System.out.println("Left Score: " + leftSide.score);
+        System.out.println("Right Score: " + rightSide.score);
+        System.out.println("Total Score: " + totalScore);
+        return totalScore;
+    }
+
+    public double GetDiagonalUpScore(Field field, Color color){
+        SideResult leftSide = EvaluateSide(field, "DownLeft", color );
+        SideResult rightSide = EvaluateSide(field, "UpRight", color);
+        double totalScore = leftSide.score + rightSide.score;
+
+        if(leftSide.consecutive + rightSide.consecutive >= 3){
+            totalScore = Config.FOUR_IN_A_ROW;
+        }
+
+        System.out.println("==============================");
+        System.out.println("Diagonal UP Score");
+        System.out.println("==============================");
+        System.out.println("Left Score: " + leftSide.score);
+        System.out.println("Right Score: " + rightSide.score);
+        System.out.println("Total Score: " + totalScore);
+        return totalScore;
+    }
+
+    public double GetDiagonalDownScore(Field field, Color color){
+        SideResult leftSide = EvaluateSide(field, "UpLeft", color );
+        SideResult rightSide = EvaluateSide(field, "DownRight", color);
+        double totalScore = leftSide.score + rightSide.score;
+
+        if(leftSide.consecutive + rightSide.consecutive >= 3){
+            totalScore = Config.FOUR_IN_A_ROW;
+        }
+
+        System.out.println("==============================");
+        System.out.println("Diagonal Down Score");
+        System.out.println("==============================");
+        System.out.println("Left Score: " + leftSide.score);
+        System.out.println("Right Score: " + rightSide.score);
+        System.out.println("Total Score: " + totalScore);
+        return totalScore;
     }
 
     public int GetFieldScore(int x, int y){
-
-
 
         return 0;
     }
