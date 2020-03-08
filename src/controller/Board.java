@@ -13,23 +13,30 @@ public class Board {
     }
 
     public void InitBoard(){
+//        Fill board with blank spaces
         for(int i=0; i<this.size_x; i++){
             for(int j=0; j<this.size_y; j++){
                 board[i][j] = new Coin(Color.BLANK, i, j);
+            }
+        }
+//        Sense surrounding for every field
+        for(int i=0; i<this.size_x; i++){
+            for(int j=0; j<this.size_y; j++){
+                board[i][j].SenseSurroundings(board);
             }
         }
     }
 
     public void PrintBoard(){
         System.out.println("========================================");
-        for(int i=0; i<this.size_x; i++){
-            for(int j=0; j<this.size_y; j++){
-                switch(board[i][j].color) {
+        for(int i=this.size_y - 1; i>=0; i--){
+            for(int j=0; j<this.size_x; j++){
+                switch(board[j][i].color) {
                     case RED:
-                        System.out.print(1 + " ");
+                        System.out.print(2 + " ");
                         break;
                     case YELLOW:
-                        System.out.print(2 + " ");
+                        System.out.print(1 + " ");
                         break;
                     case BLANK:
                         System.out.print(0 + " ");
@@ -62,11 +69,7 @@ public class Board {
 
     public Coin GetField(int x, int y){
         if ((x >= 0 && x < size_x) && (y >= 0 && y<size_y)){
-            System.out.println(board[x][y].surroundings.get("Up"));
-            System.out.println(board[x][y].surroundings.get("Down"));
-            System.out.println(board[x][y].surroundings.get("Left"));
-            System.out.println(board[x][y].surroundings.get("Right"));
-            System.out.println(board[x][y].surroundings.get("UpRight"));
+            board[x][y].printSurroundings();
             return board[x][y];
         }
         return null;
