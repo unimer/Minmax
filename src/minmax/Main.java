@@ -1,6 +1,7 @@
 package minmax;
 import controller.Board;
 import config.*;
+import controller.Evaluator;
 import controller.Field;
 
 public class Main {
@@ -34,5 +35,11 @@ public class Main {
         board.PrintBoard();
 
         board.GetField(6,2);
+
+        Evaluator evaluator = new Evaluator(board.board);
+
+        evaluator.GetHorizontalScore(board.board[4][1], Color.RED);
+
+
     }
 }
