@@ -3,6 +3,7 @@ package controller;
 import config.Color;
 import config.Config;
 import javafx.geometry.Side;
+import model.Position;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,9 +59,6 @@ public class Evaluator {
 
         // Evaluate Consecutive
         switch (consecutive){
-            case 0:
-                score += 0;
-                break;
             case 1:
                 score += Config.TWO_IN_A_ROW;
                 break;
@@ -71,7 +69,7 @@ public class Evaluator {
                 score += Config.FOUR_IN_A_ROW;
                 break;
             default:
-                score += 1;
+                score += 0;
         }
 
         switch (siblings - consecutive){
@@ -160,9 +158,38 @@ public class Evaluator {
         return totalScore;
     }
 
-    public int GetFieldScore(int x, int y){
+    public double GetFieldScore(int x, int y, Color color){
+        Field field = board[x][y];
+        double horizontal = GetHorizontalScore(field, color);
+        double vertical = GetVerticalScore(field, color);
+        double diagonalUp = GetDiagonalUpScore(field, color);
+        double diagonalDown = GetDiagonalDownScore(field, color);
 
-        return 0;
+        //if no better other solution put it on center
+        if (x == Config.BOARD_CENTER){
+            horizontal += 2;
+        }
+
+        return horizontal + vertical + diagonalUp + diagonalDown;
+    }
+
+    public Score GetMaxScoreField(Color color){
+        Score maxScore = new Score();
+        for (int i=0; i<Config.SIZE_X; i++){
+            int j = 0;
+            while(board[i][j].color != Color.BLANK){
+                j++;
+            }
+            System.out.println("x: " + i + "y: " + j);
+            double currentFieldScore = GetFieldScore(i, j, color);
+            if (currentFieldScore > maxScore.value){
+                maxScore.value = currentFieldScore;
+                maxScore.position = new Position(i, j);
+            }
+        }
+
+        System.out.println("Max Score: " + maxScore.value + " Position: " + maxScore.position.x + ", " + maxScore.position.y );
+        return maxScore;
     }
 
 }

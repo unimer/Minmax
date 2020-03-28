@@ -4,6 +4,10 @@ public interface Config {
 
     int SIZE_X = 7;
     int SIZE_Y = 6;
+    int BOARD_CENTER= 3;
+
+    //Search
+    int DEPTH = 4;
 
     //Scores
     int ONE_IN_A_ROW = 1;

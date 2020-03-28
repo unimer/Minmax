@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e08ce099-e930-44e6-afc6-736e17f945e9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/controller/Score.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/controller/SearchLogic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/Evaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Evaluator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/minmax/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/minmax/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Position.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Position.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -74,10 +81,28 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/controller/Board.java</url>
+          <line>29</line>
+          <option name="timeStamp" value="32" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="board[0].length" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

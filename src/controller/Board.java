@@ -12,6 +12,32 @@ public class Board {
         InitBoard();
     }
 
+    public Board(Board board){
+        this.size_x = board.getSize_x();
+        this.size_y = board.getSize_y();
+        this.board = new Field[size_x][size_y];
+        InitBoard();
+        this.board = board.GetBoardCopy();
+    }
+
+    public Field[][] GetBoardCopy(){
+        Field[][] copy = new Field[size_x][size_y];
+        for (int i=0; i<size_x; i++){
+            for(int j=0; j<size_y; j++){
+                copy[i][j] = new Field(board[i][j].color, i, j);
+            }
+        }
+        return copy;
+    }
+
+    public int getSize_x(){
+        return size_x;
+    }
+
+    public int getSize_y(){
+        return size_y;
+    }
+
     public void InitBoard(){
 //        Fill board with blank spaces
         for(int i=0; i<this.size_x; i++){
@@ -64,6 +90,27 @@ public class Board {
             }
         } else {
             System.out.println("Error inserting " + x + ", " + y);
+        }
+    }
+
+    public void InsertField(Color color, int x){
+        if (x >= 0 && x < size_x){
+            int y = 0;
+            while (y < size_y - 1 && board[x][y].color != Color.BLANK){
+                y++;
+            }
+            if (board[x][y].color == Color.BLANK)
+            {
+                board[x][y].position.x = x;
+                board[x][y].position.y = y;
+                board[x][y].color = color;
+
+                board[x][y].SenseSurroundings(board);
+            } else {
+                System.out.println("[" + x + ", " + y + "] already taken [" + board[x][y].color + "]");
+            }
+        } else {
+            System.out.println("Error inserting " + x );
         }
     }
 
