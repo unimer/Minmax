@@ -93,7 +93,7 @@ public class Board {
         }
     }
 
-    public void InsertField(Color color, int x){
+    public Field InsertField(Color color, int x){
         if (x >= 0 && x < size_x){
             int y = 0;
             while (y < size_y - 1 && board[x][y].color != Color.BLANK){
@@ -106,11 +106,14 @@ public class Board {
                 board[x][y].color = color;
 
                 board[x][y].SenseSurroundings(board);
+                return board[x][y];
             } else {
                 System.out.println("[" + x + ", " + y + "] already taken [" + board[x][y].color + "]");
+                return null;
             }
         } else {
             System.out.println("Error inserting " + x );
+            return null;
         }
     }
 

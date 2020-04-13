@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 class SideResult{
-    public double score;
     public int consecutive;
+    public int siblings;
+    public int spaceToGrow;
 
-    public SideResult(double score, int consecutive){
-        this.score = score;
+    public SideResult(int consecutive, int siblings, int spaceToGrow){
         this.consecutive = consecutive;
+        this.siblings = siblings;
+        this.spaceToGrow = spaceToGrow;
     }
 }
 
@@ -27,149 +29,113 @@ public class Evaluator {
         this.board = board;
     }
 
-    public SideResult EvaluateSide(Field field, String side, Color color){
+    public Evaluator(){
+
+    }
+
+    public double CalculateScore(SideResult left, SideResult right){
+        int consecutive = left.consecutive + right.consecutive;
+        int siblings = left.siblings + right.siblings;
+        int spaceToGrow = left.spaceToGrow + right.spaceToGrow;
+
+        int sum = 0;
+        if (consecutive >= 3) {
+            return Config.FOUR_IN_A_ROW;
+        } else {
+            double consecutive_normalized = consecutive * Config.CONSECUTIVE;
+            double siblings_normalized = siblings * Config.SIBLINGS;
+            double spaceToGrow_normalized = spaceToGrow * Config.SPACE_TO_GROW;
+            return (Math.pow(2, consecutive_normalized) * spaceToGrow_normalized) + (1 * siblings_normalized);
+        }
+    }
+
+    public SideResult EvaluateSide(Field field, String side){
+        /*
+        TODO:
+            - calculate how much space it can grow
+            - calculate consecutive
+            - sum those from above and calculate how much of same are i the same row
+            - evaluate upper field to score opponents move
+         */
+
         int consecutive = 0;
         int siblings = 0;
         double score = 0;
+        int spaceToGrow = 0;
 
         ArrayList<Field> list = field.surroundings.get(side);
-        boolean gap = true;
-        if (list.size() > 0){
-            if (list.get(0).color == color){
-                gap = false;
-            }
-        }
+        boolean gap = false;
+        boolean opponentCoin = false;
         for (int i=0; i<list.size(); i++){
-            if (list.get(i).color == color){
-                if (!gap) consecutive++;
-                siblings++;
-            }
-            else if (list.get(i).color == Color.BLANK){
-                gap = true;
-                continue;
-            }
-            else{
+            if (list.get(i).color != Color.BLANK && list.get(i).color != field.color) {
                 break;
+            }
+
+            if (list.get(i).color == Color.BLANK){
+                spaceToGrow++;
+                gap = true;
+            }
+
+            if (list.get(i).color == field.color) {
+                siblings ++;
+                if (!gap) {
+                    consecutive++;
+                }
             }
         }
 
         System.out.println("-------------------------------");
         System.out.println("Consecutive: " + consecutive);
         System.out.println("Left: " + siblings);
+        System.out.println("Space to grow: " + spaceToGrow);
 
-        // Evaluate Consecutive
-        switch (consecutive){
-            case 1:
-                score += Config.TWO_IN_A_ROW;
-                break;
-            case 2:
-                score += Config.THREE_IN_A_ROW;
-                break;
-            case 3:
-                score += Config.FOUR_IN_A_ROW;
-                break;
-            default:
-                score += 0;
-        }
 
-        switch (siblings - consecutive){
-            case 1:
-                score += Config.TWO_IN_A_ROW_W_SPACES;
-                break;
-            case 2:
-                score += Config.THREE_IN_A_ROW_W_SPACES;
-                break;
-            default:
-                score += 0;
-        }
-
-        return new SideResult(score, consecutive);
+        return new SideResult(consecutive, siblings, spaceToGrow);
     }
 
-    public double GetHorizontalScore(Field field, Color color){
-        SideResult leftSide = EvaluateSide(field, "Left", color );
-        SideResult rightSide = EvaluateSide(field, "Right", color);
-        double totalScore = leftSide.score + rightSide.score;
+    public double GetHorizontalScore(Field field){
+        SideResult leftSide = EvaluateSide(field, "Left");
+        SideResult rightSide = EvaluateSide(field, "Right");
 
-        if(leftSide.consecutive + rightSide.consecutive >= 3){
-            totalScore = Config.FOUR_IN_A_ROW;
-        }
-
-        System.out.println("==============================");
-        System.out.println("Horizontal Score");
-        System.out.println("==============================");
-        System.out.println("Left Score: " + leftSide.score);
-        System.out.println("Right Score: " + rightSide.score);
-        System.out.println("Total Score: " + totalScore);
-        return totalScore;
+//        System.out.println("Score: " + (CalculateScore(leftSide, rightSide)));
+        return CalculateScore(leftSide, rightSide);
     }
 
-    public double GetVerticalScore(Field field, Color color){
-        SideResult leftSide = EvaluateSide(field, "Up", color );
-        SideResult rightSide = EvaluateSide(field, "Down", color);
-        double totalScore = leftSide.score + rightSide.score;
+    public double GetVerticalScore(Field field){
+        SideResult leftSide = EvaluateSide(field, "Up");
+        SideResult rightSide = EvaluateSide(field, "Down");
+//        System.out.println("Score: " + (CalculateScore(leftSide, rightSide)));
 
-        if(leftSide.consecutive + rightSide.consecutive >= 3){
-            totalScore = Config.FOUR_IN_A_ROW;
-        }
-
-        System.out.println("==============================");
-        System.out.println("Vertical Score");
-        System.out.println("==============================");
-        System.out.println("Left Score: " + leftSide.score);
-        System.out.println("Right Score: " + rightSide.score);
-        System.out.println("Total Score: " + totalScore);
-        return totalScore;
+        return CalculateScore(leftSide, rightSide);
     }
 
-    public double GetDiagonalUpScore(Field field, Color color){
-        SideResult leftSide = EvaluateSide(field, "DownLeft", color );
-        SideResult rightSide = EvaluateSide(field, "UpRight", color);
-        double totalScore = leftSide.score + rightSide.score;
+    public double GetDiagonalUpScore(Field field){
+        SideResult leftSide = EvaluateSide(field, "DownLeft" );
+        SideResult rightSide = EvaluateSide(field, "UpRight");
 
-        if(leftSide.consecutive + rightSide.consecutive >= 3){
-            totalScore = Config.FOUR_IN_A_ROW;
-        }
-
-        System.out.println("==============================");
-        System.out.println("Diagonal UP Score");
-        System.out.println("==============================");
-        System.out.println("Left Score: " + leftSide.score);
-        System.out.println("Right Score: " + rightSide.score);
-        System.out.println("Total Score: " + totalScore);
-        return totalScore;
+        return CalculateScore(leftSide, rightSide);
     }
 
-    public double GetDiagonalDownScore(Field field, Color color){
-        SideResult leftSide = EvaluateSide(field, "UpLeft", color );
-        SideResult rightSide = EvaluateSide(field, "DownRight", color);
-        double totalScore = leftSide.score + rightSide.score;
+    public double GetDiagonalDownScore(Field field){
+        SideResult leftSide = EvaluateSide(field, "UpLeft");
+        SideResult rightSide = EvaluateSide(field, "DownRight");
 
-        if(leftSide.consecutive + rightSide.consecutive >= 3){
-            totalScore = Config.FOUR_IN_A_ROW;
-        }
-
-        System.out.println("==============================");
-        System.out.println("Diagonal Down Score");
-        System.out.println("==============================");
-        System.out.println("Left Score: " + leftSide.score);
-        System.out.println("Right Score: " + rightSide.score);
-        System.out.println("Total Score: " + totalScore);
-        return totalScore;
+        return CalculateScore(leftSide, rightSide);
     }
 
-    public double GetFieldScore(int x, int y, Color color){
+    public double GetFieldScore(int x, int y){
         Field field = board[x][y];
-        double horizontal = GetHorizontalScore(field, color);
-        double vertical = GetVerticalScore(field, color);
-        double diagonalUp = GetDiagonalUpScore(field, color);
-        double diagonalDown = GetDiagonalDownScore(field, color);
-
-        //if no better other solution put it on center
-        if (x == Config.BOARD_CENTER){
-            horizontal += 2;
-        }
-
+        double horizontal = GetHorizontalScore(field);
+        double vertical = GetVerticalScore(field);
+        double diagonalUp = GetDiagonalUpScore(field);
+        double diagonalDown = GetDiagonalDownScore(field);
+        return horizontal + vertical + diagonalUp + diagonalDown;
+    }
+    public double GetFieldScore(Field field) {
+        double horizontal = GetHorizontalScore(field);
+        double vertical = GetVerticalScore(field);
+        double diagonalUp = GetDiagonalUpScore(field);
+        double diagonalDown = GetDiagonalDownScore(field);
         return horizontal + vertical + diagonalUp + diagonalDown;
     }
 
@@ -181,7 +147,7 @@ public class Evaluator {
                 j++;
             }
             System.out.println("x: " + i + "y: " + j);
-            double currentFieldScore = GetFieldScore(i, j, color);
+            double currentFieldScore = GetFieldScore(i, j);
             if (currentFieldScore > maxScore.value){
                 maxScore.value = currentFieldScore;
                 maxScore.position = new Position(i, j);

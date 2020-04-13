@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 class Node {
     public Node[] children; //pointers to other nodes
-    public int score = 0; //Node Value
+    public double score = 0; //Node Value
     public int height = 0; //Node Value
     public Board board;
     public Node(){
@@ -18,21 +18,25 @@ class Node {
 
 public class SearchLogic {
 
-    public Node[] x = new Node[Config.SIZE_X];
+    public Node[] root = new Node[Config.SIZE_X];
 
-    public void BuildTree (Node[] root, Board board, int height){
+    public Color FlipColor (Color color) {
+        return color == Color.RED ? Color.YELLOW : Color.RED;
+    }
+    public void BuildTree (Node[] root, Board board, int height, Color player){
         if (height < 0) return;
         for (int i = 0; i < root.length; i++){
             root[i] = new Node();
             root[i].height = height;
-            root[i].score = i;
             root[i].board = new Board(board);
-            root[i].board.InsertField(Color.RED, i);
+            Field field = root[i].board.InsertField(player, i);
+            Evaluator evaluator = new Evaluator();
+            root[i].score = evaluator.GetFieldScore(field);
             System.out.println("[Height: " + root[i].height + "]: " + root[i].score);
             root[i].board.PrintBoard();
             if (height > 0) {
                 root[i].children = new Node[root.length];
-                BuildTree(root[i].children, root[i].board, height - 1);
+                BuildTree(root[i].children, root[i].board, height - 1, FlipColor(player));
             }
         }
     }
@@ -40,9 +44,9 @@ public class SearchLogic {
     public void PrintTree (Node [] root){
         if (root == null) return;
         for (int i = 0; i < root.length; i++){
-            System.out.println("[Height: " + root[i].height + "]: " + root[i].score);
+//            System.out.println("[Height: " + root[i].height + "]: " + root[i].score);
 //            root[i].board.PrintBoard();
-            PrintTree(root[i].children);
+//            PrintTree(root[i].children);
         }
     }
 
